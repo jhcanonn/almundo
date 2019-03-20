@@ -2,7 +2,6 @@ package com.jhcanonn.callcenter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +33,7 @@ public class Call {
                 logger("End");
                 timer.cancel();
                 timer.purge();
-                dispatchWaitingCalls();
+                dispatcher.dispatchWaitingCall(employee);
             }
         }
     };
@@ -61,21 +60,6 @@ public class Call {
                 + ", Employee: " + employee.getFullName()
                 + ", Position: " + employee.getPosition();
         System.out.println(msg);
-    }
-
-    private void dispatchWaitingCalls() {
-        List<Call> callWaiting = dispatcher.getCallWaiting();
-        if (callWaiting.size() > 0) {
-            // Se remueve la llamada de llamadas en espera
-            Call call = callWaiting.get(0);
-            callWaiting.remove(call);
-
-            // Se inicia a atender la primera llamada en espera
-            employee.setState(State.BUSY);
-            call.setEmployee(employee);
-            call.setDispatcher(dispatcher);
-            call.start();
-        }
     }
 
     public Integer getDuration() {

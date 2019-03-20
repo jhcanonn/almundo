@@ -13,20 +13,44 @@ public class Dispatcher {
     private List<Employee> employees = new ArrayList<>();
     private List<Call> callWaiting = new ArrayList<>();
 
-    public void dispatchCall() {
+    public boolean dispatchCall() {
         initEmployees();
         calls.forEach(call -> {
             Employee employee = getEmployeeFree();
             if (employee != null) {
-                employee.setState(State.BUSY);
-                call.setEmployee(employee);
-                call.setDispatcher(this);
-                call.start();
+                startCall(employee, call);
             } else {
                 System.out.println(call.getClient().getFullName() + " from " + call.getClient().getCity() + " is waiting for a employee...");
                 callWaiting.add(call);
             }
         });
+        return true;
+    }
+
+    public void dispatchWaitingCall(Employee employee) {
+        if (callWaiting.size() > 0) {
+            // Se remueve la llamada de llamadas en espera
+            Call call = callWaiting.get(0);
+            callWaiting.remove(call);
+            // Se inicia a atender la primera llamada en espera
+            startCall(employee, call);
+        }
+    }
+
+    private void startCall(Employee employee, Call call) {
+        employee.setState(State.BUSY);
+        call.setEmployee(employee);
+        call.setDispatcher(this);
+        call.start();
+    }
+
+    public boolean checkEmployeesFree() {
+        for (Employee employee : employees) {
+            if (employee.getState() == State.BUSY) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void initEmployees() {
@@ -47,11 +71,11 @@ public class Dispatcher {
     }
 
     private Employee getEmployeeFree() {
-        Employee employee = getEmployeePosition(Position.OPERATOR);
-        if (employee == null) {
-            employee = getEmployeePosition(Position.SUPERVISOR);
-            if (employee == null) {
-                employee = getEmployeePosition(Position.DIRECTOR);
+        Employee employee = null;
+        for (Position position : Position.values()) {
+            employee = getEmployeePosition(position);
+            if (employee != null) {
+                break;
             }
         }
         return employee;
