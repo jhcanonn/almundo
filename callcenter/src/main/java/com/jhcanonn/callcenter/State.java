@@ -5,5 +5,8 @@ package com.jhcanonn.callcenter;
  * @author Jair Cañon
  */
 public enum State {
-    FREE, BUSY
+    // Estado disponible
+    FREE,
+    // Estado ocupado
+    BUSY
 }

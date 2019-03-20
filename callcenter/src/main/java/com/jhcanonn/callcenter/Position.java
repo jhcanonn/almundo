@@ -5,5 +5,10 @@ package com.jhcanonn.callcenter;
  * @author Jair Cañon
  */
 public enum Position {
-    OPERATOR, SUPERVISOR, DIRECTOR
+    // Cargo de operador
+    OPERATOR,
+    // Cargo de Supervisor
+    SUPERVISOR,
+    // Cargo de Director
+    DIRECTOR
 }
